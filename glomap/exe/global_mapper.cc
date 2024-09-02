@@ -31,6 +31,7 @@ int RunMapper(int argc, char** argv) {
   options.AddGlobalMapperFullOptions();
 
   options.Parse(argc, argv);
+  options.mapper->opt_ba.update_loss_function();
 
   if (!colmap::ExistsFile(database_path)) {
     LOG(ERROR) << "`database_path` is not a file";

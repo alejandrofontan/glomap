@@ -20,9 +20,14 @@ struct BundleAdjusterOptions : public OptimizationBaseOptions {
   int min_num_view_per_track = 3;
 
   BundleAdjusterOptions() : OptimizationBaseOptions() {
-    thres_loss_function = 1.;
+    //thres_loss_function = 1.;
     loss_function = std::make_shared<ceres::HuberLoss>(thres_loss_function);
     solver_options.max_num_iterations = 200;
+  }
+
+  void update_loss_function(){
+    std::cout << "[BundleAdjusterOptions] (update_loss_function) thres_loss_function: " << thres_loss_function << std::endl;
+    loss_function = std::make_shared<ceres::HuberLoss>(thres_loss_function);
   }
 };
 
