@@ -41,9 +41,14 @@ struct GlobalPositionerOptions : public OptimizationBaseOptions {
       1.0;  // only relevant for POINTS_AND_CAMERAS_BALANCED
 
   GlobalPositionerOptions() : OptimizationBaseOptions() {
-    thres_loss_function = 1e-1;
+    //thres_loss_function = 1e-1;
     loss_function = std::make_shared<ceres::HuberLoss>(thres_loss_function);
   }
+
+  void update_loss_function(){
+      std::cout << "[GlobalPositionerOptions] (update_loss_function) thres_loss_function: " << thres_loss_function << std::endl;
+      loss_function = std::make_shared<ceres::HuberLoss>(thres_loss_function);
+    }
 };
 
 class GlobalPositioner {
