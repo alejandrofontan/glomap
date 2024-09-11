@@ -10,9 +10,6 @@ from utilities import downloadFile
 def glomap_setup():
 
     glomap_path = os.path.join(VSLAM_LAB_PATH, 'VSLAM-Baselines', 'glomap')
-    glomap_extra_files = os.path.join(VSLAM_LAB_PATH, 'VSLAM-Baselines', 'extra-files', 'glomap')
-    
-    shutil.copytree(glomap_extra_files, glomap_path, dirs_exist_ok=True)
 
     # Download Vocabulary trees
     download_url = "https://demuc.de/colmap"
