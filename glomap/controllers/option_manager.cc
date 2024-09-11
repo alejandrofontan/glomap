@@ -246,6 +246,12 @@ void OptionManager::AddInlierThresholdOptions() {
                               &mapper->inlier_thresholds.min_inlier_ratio);
   AddAndRegisterDefaultOption("Thresholds.max_rotation_error",
                               &mapper->inlier_thresholds.max_rotation_error);
+  AddAndRegisterDefaultOption("Thresholds.max_reprojection_error",
+                              &mapper->inlier_thresholds.max_reprojection_error);
+  AddAndRegisterDefaultOption("Thresholds.max_angle_error",
+                                &mapper->inlier_thresholds.max_angle_error);
+  AddAndRegisterDefaultOption("Thresholds.min_triangulation_angle",
+                                &mapper->inlier_thresholds.min_triangulation_angle);
 }
 
 void OptionManager::Reset() {
