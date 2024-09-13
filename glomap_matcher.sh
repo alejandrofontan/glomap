@@ -2,8 +2,7 @@
 echo ""
 echo "Executing colmapMatcher.sh ..."
 
-calibration_model="OPENCV" # PINHOLE, OPENCV, OPENCV_FISHEYE
-sequence_path="$1" 
+sequence_path="$1"
 exp_folder="$2" 
 exp_id="$3" 
 matcher_type="$4" # Options: exhaustive, sequential
@@ -15,6 +14,7 @@ rgb_path="${sequence_path}/rgb"
 exp_folder_colmap="${exp_folder}/colmap_${exp_id}"
 rgb_ds_txt="${exp_folder_colmap}/rgb_ds.txt"
 
+calibration_model=$(grep -oP '(?<=Camera\.model:\s)[\w]+' "$calibration_file")
 
 fx=$(grep -oP '(?<=Camera\.fx:\s)-?\d+\.\d+' "$calibration_file")
 fy=$(grep -oP '(?<=Camera\.fy:\s)-?\d+\.\d+' "$calibration_file")
@@ -41,6 +41,21 @@ pixi run -e colmap colmap database_creator --database_path ${database}
 
 ################################################################################
 echo "    colmap feature_extractor ..."
+
+if [ "${calibration_model}" == "UNKNOWN" ]
+then
+ echo "        camera model : $calibration_model"
+   pixi run -e colmap colmap feature_extractor \
+   --database_path ${database} \
+   --image_path ${rgb_path} \
+   --image_list_path ${colmap_image_list} \
+   --ImageReader.camera_model SIMPLE_PINHOLE \
+   --ImageReader.single_camera 1 \
+   --ImageReader.single_camera_per_folder 1 \
+   --SiftExtraction.use_gpu ${use_gpu}
+fi
+
+
 if [ "${calibration_model}" == "PINHOLE" ]
 then
   echo "        camera model : $calibration_model"
