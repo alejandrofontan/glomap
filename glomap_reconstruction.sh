@@ -7,7 +7,7 @@ max_rgb="50" # Default value. Can be overwritten "max_rgb:500"
 matcher_type="exhaustive" # Default value. Options: exhaustive, sequential
 use_gpu="1" # Default value.
 verbose="0"
-settings_yaml=" VSLAM-Baselines/glomap/glomap_settings.yaml"
+settings_yaml="Baselines/glomap/glomap_settings.yaml"
 
 split_and_assign() {
   local input=$1
@@ -52,10 +52,10 @@ else
 fi
 
 # Run COLMAP scripts for matching and mapping
-pixi run -e colmap ./VSLAM-Baselines/glomap/glomap_matcher.sh $sequence_path $exp_folder $exp_id $matcher_type $use_gpu ${settings_yaml}
-pixi run -e colmap ./VSLAM-Baselines/glomap/glomap_mapper.sh $sequence_path $exp_folder $exp_id ${verbose} ${settings_yaml}
+pixi run -e colmap ./Baselines/glomap/glomap_matcher.sh $sequence_path $exp_folder $exp_id $matcher_type $use_gpu ${settings_yaml}
+pixi run -e colmap ./Baselines/glomap/glomap_mapper.sh $sequence_path $exp_folder $exp_id ${verbose} ${settings_yaml}
 
 # Convert COLMAP outputs to a format suitable for VSLAM-Lab
-python VSLAM-Baselines/colmap/colmap_to_vslamlab.py $sequence_path $exp_folder $exp_id $verbose
+python Baselines/colmap/colmap_to_vslamlab.py $sequence_path $exp_folder $exp_id $verbose
 
 

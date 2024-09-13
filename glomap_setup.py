@@ -9,7 +9,7 @@ from utilities import downloadFile
 
 def glomap_setup():
 
-    glomap_path = os.path.join(VSLAM_LAB_PATH, 'VSLAM-Baselines', 'glomap')
+    glomap_path = os.path.join(VSLAM_LAB_PATH, 'Baselines', 'glomap')
 
     # Download Vocabulary trees
     download_url = "https://demuc.de/colmap"
