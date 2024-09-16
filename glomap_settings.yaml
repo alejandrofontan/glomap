@@ -5,9 +5,18 @@ RelPoseEstimation:
   max_epipolar_error: 1.0
 
 GlobalPositioning:
-  thres_loss_function: 0.1
+  thres_loss_function: 0.10000000000000001
 
 Thresholds:
+  max_angle_error: 1.0
   max_reprojection_error: 0.01
+  min_triangulation_angle: 1.0
+  min_inlier_num: 30.0
+  min_inlier_ratio: 0.25
+  max_rotation_error: 10.0
+  max_epipolar_error_E: 1.0
+  max_epipolar_error_F: 4.0
+  max_epipolar_error_H: 4.0
+
 
 
