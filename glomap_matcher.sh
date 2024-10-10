@@ -10,9 +10,11 @@ use_gpu="$5"
 settings_yaml="$6"
 
 calibration_file="${sequence_path}/calibration.yaml"
-rgb_path="${sequence_path}/rgb"
 exp_folder_colmap="${exp_folder}/colmap_${exp_id}"
 rgb_ds_txt="${exp_folder_colmap}/rgb_ds.txt"
+rgb_path="${sequence_path}/$(awk '{print $2}' "${rgb_ds_txt}" | awk -F'/' 'NR==1 {print $1}')"
+
+echo ${rgb_path}
 
 calibration_model=$(grep -oP '(?<=Camera\.model:\s)[\w]+' "$calibration_file")
 
@@ -51,7 +53,7 @@ matcher_ExhaustiveMatching_block_size=$(yq '.matcher.ExhaustiveMatching_block_si
 
 # Create colmap image list
 colmap_image_list="${exp_folder_colmap}/colmap_image_list.txt"
-awk '{print substr($2, 5)}' "$rgb_ds_txt" > "$colmap_image_list"
+awk '{split($2, arr, "/"); print arr[2]}' "$rgb_ds_txt" > "$colmap_image_list"
 
 # Create Colmap Database
 database="${exp_folder_colmap}/colmap_database.db"

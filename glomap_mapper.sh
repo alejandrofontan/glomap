@@ -7,9 +7,10 @@ exp_id="$3"
 verbose="$4"
 settings_yaml="$5"
 
-rgb_path="${sequence_path}/rgb"
 exp_folder_colmap="${exp_folder}/colmap_${exp_id}"
 calibration_file="${sequence_path}/calibration.yaml"
+rgb_ds_txt="${exp_folder_colmap}/rgb_ds.txt"
+rgb_path="${sequence_path}/$(awk '{print $2}' "${rgb_ds_txt}" | awk -F'/' 'NR==1 {print $1}')"
 
 calibration_model=$(grep -oP '(?<=Camera\.model:\s)[\w]+' "$calibration_file")
 echo "        camera model : $calibration_model"
