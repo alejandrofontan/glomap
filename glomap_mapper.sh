@@ -6,13 +6,14 @@ exp_folder="$2"
 exp_id="$3" 
 verbose="$4"
 settings_yaml="$5"
+calibration_yaml="$6"
+rgb_txt="$7"
+
 
 exp_folder_colmap="${exp_folder}/colmap_${exp_id}"
-calibration_file="${sequence_path}/calibration.yaml"
-rgb_ds_txt="${exp_folder_colmap}/rgb_ds.txt"
-rgb_path="${sequence_path}/$(awk '{print $2}' "${rgb_ds_txt}" | awk -F'/' 'NR==1 {print $1}')"
+rgb_path="${sequence_path}/$(awk '{print $2}' "${rgb_txt}" | awk -F'/' 'NR==1 {print $1}')"
 
-calibration_model=$(grep -oP '(?<=Camera\.model:\s)[\w]+' "$calibration_file")
+calibration_model=$(grep -oP '(?<=Camera\.model:\s)[\w]+' "$calibration_yaml")
 echo "        camera model : $calibration_model"
 optimize_intrinsics="0"
 skip_view_graph_calibration="1"

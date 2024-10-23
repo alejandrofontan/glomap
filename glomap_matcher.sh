@@ -8,26 +8,24 @@ exp_id="$3"
 matcher_type="$4" # Options: exhaustive, sequential
 use_gpu="$5"
 settings_yaml="$6"
+calibration_yaml="$7"
+rgb_txt="$8"
 
-calibration_file="${sequence_path}/calibration.yaml"
 exp_folder_colmap="${exp_folder}/colmap_${exp_id}"
-rgb_ds_txt="${exp_folder_colmap}/rgb_ds.txt"
-rgb_path="${sequence_path}/$(awk '{print $2}' "${rgb_ds_txt}" | awk -F'/' 'NR==1 {print $1}')"
+rgb_path="${sequence_path}/$(awk '{print $2}' "${rgb_txt}" | awk -F'/' 'NR==1 {print $1}')"
 
-echo ${rgb_path}
+calibration_model=$(grep -oP '(?<=Camera\.model:\s)[\w]+' "$calibration_yaml")
 
-calibration_model=$(grep -oP '(?<=Camera\.model:\s)[\w]+' "$calibration_file")
+fx=$(grep -oP '(?<=Camera\.fx:\s)-?\d+\.\d+' "$calibration_yaml")
+fy=$(grep -oP '(?<=Camera\.fy:\s)-?\d+\.\d+' "$calibration_yaml")
+cx=$(grep -oP '(?<=Camera\.cx:\s)-?\d+\.\d+' "$calibration_yaml")
+cy=$(grep -oP '(?<=Camera\.cy:\s)-?\d+\.\d+' "$calibration_yaml")
 
-fx=$(grep -oP '(?<=Camera\.fx:\s)-?\d+\.\d+' "$calibration_file")
-fy=$(grep -oP '(?<=Camera\.fy:\s)-?\d+\.\d+' "$calibration_file")
-cx=$(grep -oP '(?<=Camera\.cx:\s)-?\d+\.\d+' "$calibration_file")
-cy=$(grep -oP '(?<=Camera\.cy:\s)-?\d+\.\d+' "$calibration_file")
-
-k1=$(grep -oP '(?<=Camera\.k1:\s)-?\d+\.\d+' "$calibration_file")
-k2=$(grep -oP '(?<=Camera\.k2:\s)-?\d+\.\d+' "$calibration_file")
-p1=$(grep -oP '(?<=Camera\.p1:\s)-?\d+\.\d+' "$calibration_file")
-p2=$(grep -oP '(?<=Camera\.p2:\s)-?\d+\.\d+' "$calibration_file")
-k3=$(grep -oP '(?<=Camera\.k3:\s)-?\d+\.\d+' "$calibration_file")
+k1=$(grep -oP '(?<=Camera\.k1:\s)-?\d+\.\d+' "$calibration_yaml")
+k2=$(grep -oP '(?<=Camera\.k2:\s)-?\d+\.\d+' "$calibration_yaml")
+p1=$(grep -oP '(?<=Camera\.p1:\s)-?\d+\.\d+' "$calibration_yaml")
+p2=$(grep -oP '(?<=Camera\.p2:\s)-?\d+\.\d+' "$calibration_yaml")
+k3=$(grep -oP '(?<=Camera\.k3:\s)-?\d+\.\d+' "$calibration_yaml")
 k4=0.0
 k5=0.0
 k6=0.0
@@ -53,7 +51,7 @@ matcher_ExhaustiveMatching_block_size=$(yq '.matcher.ExhaustiveMatching_block_si
 
 # Create colmap image list
 colmap_image_list="${exp_folder_colmap}/colmap_image_list.txt"
-awk '{split($2, arr, "/"); print arr[2]}' "$rgb_ds_txt" > "$colmap_image_list"
+awk '{split($2, arr, "/"); print arr[2]}' "$rgb_txt" > "$colmap_image_list"
 
 # Create Colmap Database
 database="${exp_folder_colmap}/colmap_database.db"
@@ -168,7 +166,7 @@ fi
 
 if [ "${matcher_type}" == "sequential" ]
 then
-  num_rgb=$(wc -l < ${rgb_ds_txt})
+  num_rgb=$(wc -l < ${rgb_txt})
 
   # Pick vocabulary tree based on the number of images
   vocabulary_tree="Baselines/glomap/vocab_tree_flickr100K_words32K.bin"
