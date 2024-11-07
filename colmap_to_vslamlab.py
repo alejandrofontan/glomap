@@ -37,7 +37,7 @@ def get_colmap_keyframes(images_file, number_of_header_lines, verbose=False):
             q_wc_i = R.from_quat([QX, QY, QZ, QW]).inv()
             R_wc_i = q_wc_i.as_matrix()
             
-            q_wc_xyzw.append([q_wc_i.as_quat()[1], q_wc_i.as_quat()[2], q_wc_i.as_quat()[3], q_wc_i.as_quat()[0]])
+            q_wc_xyzw.append([q_wc_i.as_quat()[0], q_wc_i.as_quat()[1], q_wc_i.as_quat()[2], q_wc_i.as_quat()[3]])
             t_wc.append(-R_wc_i @ t_cw_i)
 
             file.readline()
