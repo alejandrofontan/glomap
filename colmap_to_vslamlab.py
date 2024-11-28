@@ -46,21 +46,25 @@ def get_colmap_keyframes(images_file, number_of_header_lines, verbose=False):
     q_wc_xyzw = np.array(q_wc_xyzw)
     t_wc = np.array(t_wc)
 
-    if verbose:
-        import matplotlib.pyplot as plt
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        ax.plot(t_wc[:, 0], t_wc[:, 1], t_wc[:, 2], 'k.')
-        ax.set_title("Reconstructed Trajectory")
-        plt.show()
-    
-    return image_id, t_wc, q_wc_xyzw
+    sorted_indices = image_id.argsort()
+    image_id = image_id[sorted_indices]
+    q_wc_xyzw = q_wc_xyzw[sorted_indices]
+    t_wc = t_wc[sorted_indices]
+
+    q_wc_xyzw_corrected = q_wc_xyzw.copy()
+    for i in range(1, len(q_wc_xyzw_corrected)):
+        dot_product = np.dot(q_wc_xyzw_corrected[i - 1], q_wc_xyzw_corrected[i])
+        if dot_product < 0:
+            q_wc_xyzw_corrected[i] = -q_wc_xyzw_corrected[i]
+
+    return image_id, t_wc, q_wc_xyzw_corrected
 
 def write_trajectory_tum_format(file_name, image_ts, t_wc, q_wc_xyzw):
     print(f"writeTrajectoryTUMformat: {file_name}")
     
     data = np.hstack((image_ts.reshape(-1, 1), t_wc, q_wc_xyzw))
-    
+    data = data[data[:, 0].argsort()]
+
     with open(file_name, 'w') as file:
         for row in data:
             # Format the row with the appropriate precision
